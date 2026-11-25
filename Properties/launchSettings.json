@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Launch Game (debug)": {
+      "commandName": "Executable",
+      "executablePath": "$(GameDir)\\$(GameExe)",
+      "workingDirectory": "$(GameDir)"
+    },
+    "Launch Game (Steam)": {
+      "commandName": "Executable",
+      "executablePath": "cmd.exe",
+      "commandLineArgs": "/c start steam://rungameid/3631290"
+    }
+  }
+}

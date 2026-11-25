@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Build.props.user" Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.props.user')" />
+
+  <PropertyGroup>
+    <GameDir Condition="'$(GameDir)' == ''">$(SLOTS_AND_DAGGERS_DIR)</GameDir>
+    <GameExe Condition="'$(GameExe)' == ''">Slots and Daggers.exe</GameExe>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>ScalingRerolls</AssemblyName>
+    <RootNamespace>ScalingRerolls</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>libs\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>libs\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>libs\UnityEngine.UIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>libs\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="DeployToGame" AfterTargets="Build" Condition="'$(GameDir)' != '' And Exists('$(GameDir)')">
+    <Copy SourceFiles="$(OutDir)$(AssemblyName).dll" DestinationFolder="$(GameDir)\BepInEx\plugins\ScalingRerolls" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="PackageThunderstore" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <PropertyGroup>
+      <ManifestText>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\Thunderstore\manifest.json'))</ManifestText>
+      <ModName>$([System.Text.RegularExpressions.Regex]::Replace($(ManifestText), '^[\s\S]*?"name"\s*:\s*"([^"]+)"[\s\S]*$', '$1'))</ModName>
+      <ModVersion>$([System.Text.RegularExpressions.Regex]::Replace($(ManifestText), '^[\s\S]*?"version_number"\s*:\s*"([^"]+)"[\s\S]*$', '$1'))</ModVersion>
+      <PackageName>SlotsAndDaggers$(ModName)-$(ModVersion)</PackageName>
+      <DistDir>$(MSBuildProjectDirectory)\dist</DistDir>
+      <StageDir>$(DistDir)\stage</StageDir>
+      <ZipPath>$(DistDir)\$(PackageName).zip</ZipPath>
+    </PropertyGroup>
+    <RemoveDir Directories="$(StageDir)" />
+    <MakeDir Directories="$(StageDir)" />
+    <ItemGroup>
+      <PackageDll Include="$(OutDir)$(AssemblyName).dll" />
+      <PackageMeta Include="$(MSBuildProjectDirectory)\Thunderstore\manifest.json;$(MSBuildProjectDirectory)\Thunderstore\README.md;$(MSBuildProjectDirectory)\Thunderstore\CHANGELOG.md;$(MSBuildProjectDirectory)\Thunderstore\icon.png" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PackageDll);@(PackageMeta)" DestinationFolder="$(StageDir)" />
+    <Delete Files="$(ZipPath)" />
+    <ZipDirectory SourceDirectory="$(StageDir)" DestinationFile="$(ZipPath)" Overwrite="true" />
+    <RemoveDir Directories="$(StageDir)" />
+    <Message Importance="high" Text="Thunderstore package created: $(ZipPath)" />
+  </Target>
+
+</Project>
