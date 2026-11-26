@@ -1,8 +1,8 @@
 {
   "name": "ScalingRerolls",
-  "version_number": "0.2.0",
+  "version_number": "0.2.1",
   "website_url": "https://github.com/King-Tajin/Slots-And-Daggers-Scaling-Rerolls-Mod",
-  "description": "Unlimited upgrade shop rerolls for Slots & Daggers, with a price that rises on a gentle exponential curve.",
+  "description": "Unlimited upgrade shop rerolls for Slots & Daggers, with a price that rises along a gentle quadratic curve.",
   "dependencies": [
     "BepInEx-BepInExPack-5.4.2304"
   ]

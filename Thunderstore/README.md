@@ -5,7 +5,7 @@ Removes the one reroll per shop limit in Slots & Daggers and makes the price cli
 ## Features
 
 - Unlimited rerolls in every upgrade shop
-- The price goes up every roll but it accelerates without exploding
+- The price goes up every roll and the increase grows each time, following base + acceleration x k x (k + 1) for the k-th reroll, capped at 200 or the base price if that is higher
 - Upgrade price reduction still lowers the starting price
 - The free, unlimited rerolls in the shop at the start of a run are unchanged
 - The growth rate can be changed in the config file

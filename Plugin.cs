@@ -5,7 +5,7 @@ using HarmonyLib;
 
 namespace ScalingRerolls
 {
-    [BepInPlugin("com.king_tajin.scalingrerolls", "Scaling Rerolls", "0.2.0")]
+    [BepInPlugin("com.king_tajin.scalingrerolls", "Scaling Rerolls", "0.2.1")]
     [BepInProcess("Slots and Daggers.exe")]
     public class Plugin : BaseUnityPlugin
     {
@@ -18,7 +18,7 @@ namespace ScalingRerolls
             RerollPricing.Initialize(Logger);
 
             Harmony harmony = new Harmony("com.king_tajin.scalingrerolls");
-            foreach (Type patch in new[] { typeof(ShopEnterPatch), typeof(RerollPatch) })
+            foreach (Type patch in new[] { typeof(ShopEnterPatch), typeof(RerollPatch), typeof(LoadSessionPatch), typeof(SaveSessionPatch) })
             {
                 try
                 {
